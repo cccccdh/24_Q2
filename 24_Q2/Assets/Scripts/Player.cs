@@ -70,4 +70,12 @@ public class Player : MonoBehaviour
             rb2D.velocity = Vector2.up * jumpPower;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("FallingGround"))
+        {
+            
+        }
+    }
 }
