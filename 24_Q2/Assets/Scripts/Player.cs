@@ -35,6 +35,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("SnowBall"))
+        {
+
+        }
+    }
+
     void Update()
     {
         Move();
@@ -51,9 +59,9 @@ public class Player : MonoBehaviour
         axisH = Input.GetAxis("Horizontal");
 
         if (axisH > 0.0f)
-            transform.localScale = new Vector2(1, 1);
+            transform.localScale = new Vector2(0.7f, 0.7f);
         else if (axisH < 0.0f)
-            transform.localScale = new Vector2(-1, 1);
+            transform.localScale = new Vector2(-0.7f, 0.7f);
 
         rb2D.velocity = new Vector2(speed * axisH, rb2D.velocity.y);
     }
