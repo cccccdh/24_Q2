@@ -1,8 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb2D;
+    Animator ani;
 
     float axisH;
 
@@ -14,6 +16,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
+        ani = GetComponent<Animator>();
     }
 
 
@@ -30,6 +33,7 @@ public class Player : MonoBehaviour
                 if (rayHit.distance < 0.6f)
                 {
                     isJump = false;
+                    ani.SetBool("Jump", false);
                 }
             }
         }
@@ -49,6 +53,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow) && !isJump)
         {
             isJump = true;
+            ani.SetBool("Jump", true);
             Jump();
         }
     }
@@ -64,6 +69,7 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector2(-0.7f, 0.7f);
 
         rb2D.velocity = new Vector2(speed * axisH, rb2D.velocity.y);
+        ani.SetBool("Run", true);
     }
 
     // 점프 함수
