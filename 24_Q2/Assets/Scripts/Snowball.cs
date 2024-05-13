@@ -10,6 +10,14 @@ public class Snowball : MonoBehaviour
         rb2D = gameObject.GetComponent<Rigidbody2D>();
     }
 
+    void Update()
+    {
+        if(gameObject.transform.position.y < -5)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     public void AddForce()
     {
         rb2D.AddForce(Vector2.left * 10, ForceMode2D.Impulse);
