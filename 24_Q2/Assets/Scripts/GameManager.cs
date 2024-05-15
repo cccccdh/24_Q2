@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameStatus
 {
@@ -12,6 +13,12 @@ public class GameManager : MonoBehaviour
     public static GameManager instance; // ΩÃ±€≈Ê ¿ŒΩ∫≈œΩ∫
 
     public GameStatus status { get; private set; }
+
+    public GameStatus SetStatus(GameStatus status)
+    {
+        this.status = status;
+        return status;
+    }
 
     private void Awake()
     {
@@ -32,11 +39,23 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        
-    }
+        if(status == GameStatus.GameStart)
+        {
+            
+        }
+        else if(status == GameStatus.GameOver)
+        {
+            Invoke("GameOver",3);
+        }
+        else
+        {
 
+        }
+    }
+        
     void GameOver()
     {
-        Debug.Log("æ¿ ¥ŸΩ√ Ω√¿€");
+        status = GameStatus.GameStart;
+        SceneManager.LoadScene("Main");
     }
 }

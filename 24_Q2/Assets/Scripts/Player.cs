@@ -1,12 +1,17 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    GameManager gameManager;
     Rigidbody2D rb2D;
     Animator ani;
 
-    public bool isJumping = false;         // 점프 확인
+    public GameManager gm;
+    public Slider satietyBar;
+
+    int satiety = 100;      // 포만감
+
+    bool isJumping = false;         // 점프 확인
     bool isGrounded = false;        // 땅 체크
 
     public float speed;             // 이동속도
@@ -16,6 +21,7 @@ public class Player : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
+        SetMaxSatiety();
     }
 
     void FixedUpdate()
@@ -23,14 +29,13 @@ public class Player : MonoBehaviour
         CheckGround();
         if (isJumping) Jump();
     }
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Fish"))
         {
-            // 물고기 먹었을 때 물고기 사라지게하기
             collision.gameObject.SetActive(false);
-            // 물고기 먹었을 때 허기 감소
+            IncreaseSatiety(10);
         }
     }
 
@@ -38,18 +43,56 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Snowball"))
         {
-            // 눈덩이 닿았을 때 게임 종료 후 리스폰
-            
+            gm.SetStatus(GameStatus.GameOver);
         }
     }
 
     void Update()
     {
-        Move();
-        InputJump();
+        if(gm.status == GameStatus.GameStart)
+        {
+            Move();
+            InputJump();
+            DecreaseSatiety();            
+        }
         UpdateAnimation();
     }
 
+    // 초기 포만감 설정 함수
+    void SetMaxSatiety()
+    {
+        satietyBar.maxValue = satiety;
+        satietyBar.value = satiety;
+    }
+
+    // 포만감 감소
+    void DecreaseSatiety()
+    {
+        if(Mathf.Abs(Input.GetAxis("Horizontal")) > 0.0f)
+        {
+            satietyBar.value -= 1.5f * Time.deltaTime;
+
+            if (satietyBar.value >= 60)
+            {
+                satietyBar.fillRect.GetComponent<Image>().color = Color.green;
+            }
+            else if (satietyBar.value >30 && satietyBar.value < 60)
+            {
+                satietyBar.fillRect.GetComponent<Image>().color = Color.yellow;
+            }
+            else
+            {
+                satietyBar.fillRect.GetComponent<Image>().color = Color.red;
+            }
+        }        
+    }
+
+    // 포만감 증가
+    void IncreaseSatiety(int Fish)
+    {
+        satietyBar.value += Fish;
+    }
+    
     // 이동 함수
     void Move()
     {
