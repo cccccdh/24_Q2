@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -17,11 +19,14 @@ public class Player : MonoBehaviour
     public float speed;             // 이동속도
     public float jumpPower;         // 점프력
 
+    public GameObject player;
+
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
         SetMaxSatiety();
+        gm = GameManager.instance;
     }
 
     void FixedUpdate()
@@ -44,11 +49,16 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Snowball"))
         {
             gm.SetStatus(GameStatus.GameOver);
+            HandleDeath();
         }
     }
 
     void Update()
     {
+        if(player.transform.position.y <-7)
+        {
+            HandleDeath();
+        }
         if(gm.status == GameStatus.GameStart)
         {
             Move();
@@ -151,5 +161,10 @@ public class Player : MonoBehaviour
     {
         rb2D.velocity = Vector2.up * jumpPower;
         isJumping = false;
+    }
+    void HandleDeath()
+    {
+        gm.IncrementDeathCount();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
