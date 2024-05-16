@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Icicle : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void UseGravity()
     {
-        
+        if (GetComponent<Rigidbody2D>() == null)
+            gameObject.AddComponent<Rigidbody2D>();
+        else
+            return;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        gameObject.SetActive(false);
     }
 }

@@ -18,6 +18,10 @@ public class ObstacleTrigger : MonoBehaviour
             {
                 obj.GetComponent<Snowball>().AddForce();
             }
+            else if(type == ObstacleType.Icicle)
+            {
+                obj.GetComponent<Icicle>().UseGravity();
+            }
         }
     }
 }

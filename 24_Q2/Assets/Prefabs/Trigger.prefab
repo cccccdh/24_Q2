@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2955962749938207777}
   - component: {fileID: 1813799882266589804}
   m_Layer: 0
-  m_Name: Trigger_Snowball
+  m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

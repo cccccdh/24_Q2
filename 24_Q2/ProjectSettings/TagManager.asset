@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Snowball
   - Fish
+  - Icicle
+  - Deathcount
   layers:
   - Default
   - TransparentFX
