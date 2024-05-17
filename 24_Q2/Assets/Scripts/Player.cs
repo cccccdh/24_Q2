@@ -1,34 +1,52 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    Rigidbody2D rb2D;
-    Animator ani;
+    // 컴포넌트 참조
+    private Rigidbody2D rb2D;
+    private Animator ani;
 
+    // 게임 매니저 및 UI
     public GameManager gm;
     public Slider satietyBar;
 
-    int satiety = 100;      // 포만감
+    // 플레이어 상태 변수
+    private int satiety = 100;      // 포만감
+    private bool isJumping = false; // 점프 확인
+    private bool isGrounded = false;// 땅 체크
+    private bool onCloud = false;   // 구름 위에 있는지 확인
 
-    bool isJumping = false;         // 점프 확인
-    bool isGrounded = false;        // 땅 체크
-
+    // 이동 및 점프 속도
     public float speed;             // 이동속도
     public float jumpPower;         // 점프력
-
-    public GameObject player;
 
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
-        SetMaxSatiety();
         gm = GameManager.instance;
+        SetMaxSatiety();
     }
+    void Update()
+    {
+        if ((transform.position.y < -7) || transform.position.y > 10) 
+            HandleDeath();
 
+        if (gm.status == GameStatus.GameStart)
+        {
+            if (!onCloud)
+            {
+                Move();
+                InputJump();
+            }
+            else 
+                rb2D.velocity = Vector3.zero;
+        }
+        DecreaseSatiety();
+        UpdateAnimation();
+    }
     void FixedUpdate()
     {
         CheckGround();
@@ -46,26 +64,12 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Snowball"))
+        if (collision.gameObject.CompareTag("Snowball")
+            || collision.gameObject.CompareTag("Icicle"))
         {
             gm.SetStatus(GameStatus.GameOver);
             HandleDeath();
         }
-    }
-
-    void Update()
-    {
-        if(player.transform.position.y <-7)
-        {
-            HandleDeath();
-        }
-        if(gm.status == GameStatus.GameStart)
-        {
-            Move();
-            InputJump();
-            DecreaseSatiety();            
-        }
-        UpdateAnimation();
     }
 
     // 초기 포만감 설정 함수
@@ -78,31 +82,33 @@ public class Player : MonoBehaviour
     // 포만감 감소
     void DecreaseSatiety()
     {
+        // 이동할 때 포만감 감소
         if(Mathf.Abs(Input.GetAxis("Horizontal")) > 0.0f)
         {
             satietyBar.value -= 1.5f * Time.deltaTime;
+        }
 
-            if (satietyBar.value >= 60)
-            {
-                satietyBar.fillRect.GetComponent<Image>().color = Color.green;
-            }
-            else if (satietyBar.value >30 && satietyBar.value < 60)
-            {
-                satietyBar.fillRect.GetComponent<Image>().color = Color.yellow;
-            }
-            else
-            {
-                satietyBar.fillRect.GetComponent<Image>().color = Color.red;
-            }
-        }        
+        // 색 변경
+        if (satietyBar.value >= 60)
+        {
+            satietyBar.fillRect.GetComponent<Image>().color = Color.green;
+        }
+        else if (satietyBar.value > 30 && satietyBar.value < 60)
+        {
+            satietyBar.fillRect.GetComponent<Image>().color = Color.yellow;
+        }
+        else
+        {
+            satietyBar.fillRect.GetComponent<Image>().color = Color.red;
+        }
     }
 
     // 포만감 증가
-    void IncreaseSatiety(int Fish)
+    void IncreaseSatiety(int amount)
     {
-        satietyBar.value += Fish;
+        satietyBar.value += amount;
     }
-    
+
     // 이동 함수
     void Move()
     {
@@ -134,14 +140,12 @@ public class Player : MonoBehaviour
 
             RaycastHit2D rayHit = Physics2D.Raycast(rb2D.position, Vector2.down, 0.6f, LayerMask.GetMask("Ground"));
 
-            if (rayHit.collider != null && rayHit.distance <= 0.6f)
+            if (rayHit.collider != null)
             {
-                isJumping = false;
-                isGrounded = true;
-            }
-            else
-            {
-                isGrounded = false;
+                isGrounded = rayHit.distance <= 0.6f;
+                isJumping = !isGrounded;
+
+                onCloud = rayHit.collider.CompareTag("Cloud");
             }
         }
     }
@@ -162,6 +166,7 @@ public class Player : MonoBehaviour
         rb2D.velocity = Vector2.up * jumpPower;
         isJumping = false;
     }
+
     void HandleDeath()
     {
         gm.IncrementDeathCount();

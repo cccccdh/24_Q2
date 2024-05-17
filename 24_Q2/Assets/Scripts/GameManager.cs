@@ -82,5 +82,6 @@ public class GameManager : MonoBehaviour
         // 씬이 로드될 때마다 데스 카운트를 업데이트합니다.
         Deathcount = GameObject.FindWithTag("Deathcount").GetComponent<TextMeshProUGUI>();
         UpdateDeathCount();
+        SetStatus(GameStatus.GameStart);
     }
 }

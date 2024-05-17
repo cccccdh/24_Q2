@@ -3,6 +3,7 @@ public enum ObstacleType
 {
     Snowball,   // ´«µ¢ÀÌ
     Icicle,     // °íµå¸§
+    cloud       // ±¸¸§
 }
 
 public class ObstacleTrigger : MonoBehaviour
@@ -21,6 +22,10 @@ public class ObstacleTrigger : MonoBehaviour
             else if(type == ObstacleType.Icicle)
             {
                 obj.GetComponent<Icicle>().UseGravity();
+            }
+            else if(type == ObstacleType.cloud)
+            {
+                obj.GetComponent<Cloud>().MoveUp();
             }
         }
     }

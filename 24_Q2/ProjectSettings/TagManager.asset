@@ -8,6 +8,7 @@ TagManager:
   - Fish
   - Icicle
   - Deathcount
+  - Cloud
   layers:
   - Default
   - TransparentFX

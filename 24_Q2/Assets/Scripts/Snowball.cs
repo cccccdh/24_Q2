@@ -20,7 +20,7 @@ public class Snowball : MonoBehaviour
 
     public void AddForce()
     {
-        rb2D.AddForce(Vector2.left * 10, ForceMode2D.Impulse);
+        rb2D.AddForce(Vector2.left * 7, ForceMode2D.Impulse);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
