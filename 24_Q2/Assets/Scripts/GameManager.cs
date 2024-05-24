@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance; // 싱글톤 인스턴스
     public TextMeshProUGUI Deathcount;
+    public GameObject gameOverCanvas;
     private int death = 0;
 
     public GameStatus status { get; private set; }
@@ -39,6 +40,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (gameOverCanvas != null)
+        {
+            gameOverCanvas.SetActive(false);
+        }
+
         UpdateDeathCount();
         status = GameStatus.GameStart;
     }
@@ -65,7 +71,8 @@ public class GameManager : MonoBehaviour
         }
         else if (status == GameStatus.GameOver)
         {
-            Invoke("GameOver", 3);
+            ShowGameOverScreen(); 
+            Invoke("RestartGame", 2); // 2초 후에 재시작합니다.
         }
         else
         {
@@ -73,9 +80,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void GameOver()
+    private void ShowGameOverScreen()
     {
-        // Game over logic
+        // 게임오버 시 게임오버 캔버스를 활성화합니다.
+        if (gameOverCanvas != null)
+        {
+            gameOverCanvas.SetActive(true);
+        }
+    }
+    private void RestartGame()
+    {
+        // 게임을 재시작합니다. 현재 씬을 다시 로드합니다.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        // 게임 오버 캔버스를 다시 비활성화합니다.
+        if (gameOverCanvas != null)
+        {
+            gameOverCanvas.SetActive(false);
+        }
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {

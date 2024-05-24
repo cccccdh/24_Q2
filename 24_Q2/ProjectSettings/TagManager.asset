@@ -9,6 +9,7 @@ TagManager:
   - Icicle
   - Deathcount
   - Cloud
+  - GameOverImage
   layers:
   - Default
   - TransparentFX
