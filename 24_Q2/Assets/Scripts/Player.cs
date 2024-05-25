@@ -32,9 +32,6 @@
 
         void Update()
         {
-            if ((transform.position.y < -7) || transform.position.y > 10)
-                HandleDeath();
-
             if (gm.status == GameStatus.GameStart)
             {
                 if (!onCloud)
@@ -44,6 +41,9 @@
                 }
                 else
                     rb2D.velocity = Vector3.zero;
+
+                if ((transform.position.y < -7) || transform.position.y > 10)
+                HandleDeath();
             }
             DecreaseSatiety();
             UpdateAnimation();
@@ -172,6 +172,7 @@
         void HandleDeath()
         {
             gm.IncrementDeathCount();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            gm.SetStatus(GameStatus.GameOver);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
