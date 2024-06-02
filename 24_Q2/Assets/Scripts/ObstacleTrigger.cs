@@ -3,7 +3,8 @@ public enum ObstacleType
 {
     Snowball,   // 눈덩이
     Icicle,     // 고드름
-    cloud       // 구름
+    cloud,      // 구름
+    move,       // 움직이는 바닥
 }
 
 public class ObstacleTrigger : MonoBehaviour
@@ -26,6 +27,10 @@ public class ObstacleTrigger : MonoBehaviour
             else if(type == ObstacleType.cloud)
             {
                 obj.GetComponent<Cloud>().MoveUp();
+            }
+            else if(type == ObstacleType.move)
+            {
+                obj.GetComponent<MoveGround>().MovingL();
             }
         }
     }
